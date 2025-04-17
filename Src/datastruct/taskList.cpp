@@ -81,6 +81,7 @@ taskEntry& taskList::move()
 void (*taskList::exec(_u32& tid))(Core*)
 {
 	taskEntry* ptr = &start, * tem;
+	void (*fptr)(Core*);
 
 	for (; ptr->next != nullptr;)
 	{
@@ -90,8 +91,9 @@ void (*taskList::exec(_u32& tid))(Core*)
 			ptr->next = nullptr;
 			start.res = (resList*)((_u32)start.res - 1);
 			tid = tem->id;
-
-			return tem->ptr;
+			fptr = tem->ptr;
+			delete tem;
+			return fptr;
 		}
 		else
 		{

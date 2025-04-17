@@ -1,15 +1,18 @@
+#include"res/other/type.h"
+#include"res/other/config.h"
 
-
-
-#include"res/dynamic/sth7/gpio.h"
-#include"res/dynamic/sth7/mutex.h"
 
 class Manager {
-	MUTEX m[6];
+	_u32 id;
+
+	void* ptr;
+	_ptrSize size;
 public:
 	void init();
-	_u8 getGPIO(GPIO* &ptr)volatile;
-	_u8 getMUTEX(MUTEX* &ptr);
+
+
+
+
 };
 
 

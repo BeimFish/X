@@ -1,19 +1,22 @@
-
-
 #include "manager.h"
+#include"datastruct/bitMap.h"
+#include"datastruct/resList.h"
+#include"datastruct/taskList.h"
+#if defined(USE_WINDOWS) || defined(USE_LINUX)
+#include<mutex>
+#include<stdlib.h>
+#else
+
+#endif
 
 void Manager::init()
 {
-	for(_u8 i=0;i<6;i++) m[i].unlock();
+	id = 1;
+
+	size = HEAPSIZE;
+	ptr = malloc(size);
+	size = (_u32)ptr + HEAPSIZE;
+	
 
 }
-_u8 Manager::getGPIO(GPIO* &ptr)volatile
-{
-	ptr=new GPIO(16*5+5);
-	return 0;
-}
-_u8 Manager::getMUTEX(MUTEX* &ptr)
-{
-	ptr = &m[0];
-	return 0;
-}
+

@@ -1,18 +1,18 @@
 #include"res/other/type.h"
 enum resVector
 {
-	all=0,
-	num,
-	mutex
+	start = 0,
+	mutex,
+	end
 };
 
 struct resEntry
 {
 	resEntry* next;
 
-	void* address;  //��¼��Դ��ַ
-	_u8 type;       //��¼��Դ����
-	_u8 id;         //��ǰʹ�ø���Դ��task������Core��id
+	void* address;  //资源指针
+	_u8 type;       //资源类型
+	_u8 id;         //当前使用该资源的任务id
 };
 
 class resList

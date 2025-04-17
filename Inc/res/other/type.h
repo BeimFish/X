@@ -6,4 +6,8 @@ typedef unsigned char      _u8;
 typedef unsigned short     _u16;
 typedef unsigned int       _u32;
 typedef unsigned long long _u64;
-typedef bool               _b1;
+
+
+
+
+typedef _u64 _ptrSize;

@@ -1,7 +1,4 @@
-
-#include "core.h"
-#include"res/other/type.h"
-#include"res/other/config.h"
+#include"core.h"
 #include"datastruct/bitMap.h"
 #include"datastruct/resList.h"
 #include"datastruct/taskList.h"

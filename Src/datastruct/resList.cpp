@@ -4,7 +4,7 @@ void resList::init(_u16 id)
 	start.next = nullptr;
 	start.address = nullptr;
 	start.id = id;
-	start.type = 0;
+	start.type = resVector::start;
 }
 void resList::createEntry(resEntry& newEntry,_u8 id)
 {

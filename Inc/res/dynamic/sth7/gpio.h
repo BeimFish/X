@@ -1,12 +1,4 @@
-/*
- * gpio.h
- *
- *  Created on: Mar 16, 2025
- *      Author: 29450
- */
 
-#ifndef RES_DYNAMIC_STH7_GPIO_H
-#define RES_DYNAMIC_STH7_GPIO_H
 #include"res/other/type.h"
 struct GPIO_Type
 {
@@ -53,4 +45,3 @@ public:
 
 };
 
-#endif /* RES_DYNAMIC_STH7_GPIO_H_ */
