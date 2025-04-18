@@ -5,7 +5,7 @@ class resList;
 class resEntry;
 class taskList;
 class taskEntry;
-
+class memoryList;
 
 #if defined(USE_WINDOWS) || defined(USE_LINUX)
 namespace std {
@@ -18,23 +18,25 @@ class MUTEX;        // 自定义的MUTEX类前向声明（非标准）
 
 
 class Core {
-    _u16 id;                                     //内核id
-    _u32 tid;                                   //当前执行的任务id
-    _u32 execTaskNum;                           //记录执行任务的数量
-    resList* resMessenger;                      //资源管理
-    taskList* taskMessenger;                    //Task队列
+    _u16 id;                                         //内核id
+    _u32 tid;                                        //当前执行的任务id
+    _u32 execTaskNum;                                //记录执行任务的数量
+    resList* resManager;                             //资源管理
+    taskList* taskManager;                           //Task队列
+    _u64 memoryManager[8];                           //私有内存池
 #if defined(USE_WINDOWS) || defined(USE_LINUX)
     std::thread* thread;                        //Core线程
 #endif
+    void free(_u32 id);
 
+public:                    
 
-
-public:                    //释放资源
-
-    void init(_u8 id);                                               //Core初始化
-    _u8 create(taskEntry& newTask);                   //Task创建
-    _u32 TID();
-    _u32 taskLength();
+    void init(_u8 id, void* ptr, _u32 size);                         //Core初始化
+    _u8 create(void(*ptr)(Core*), void* res);                        //Task创建
+    _u32 TID();                                                      //返回当前执行任务的tid
+    _u32 taskLength();                                               //返回就绪任务的数量
+    void* malloc(_u32 size);                                         //内存申请
+    void free(void* ptr);                                            //内存释放
 
     /////////////////////////////////资源API///////////////////////////////////////
 #if defined(USE_WINDOWS)

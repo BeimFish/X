@@ -4,7 +4,8 @@ void taskList::init(_u32 id)
 	start.next = nullptr;
 	start.res = (resList*)0;
 	start.ptr = [](Core*) {};
-	start.id = id;
+	start.id = (id << 24);
+
 }
 void taskList::createEntry(taskEntry& newEntry)
 {
@@ -75,13 +76,9 @@ taskEntry& taskList::move()
 	return start;
 }
 
-
-
-
-void (*taskList::exec(_u32& tid))(Core*)
+taskEntry& taskList::exec(_u32& tid)
 {
 	taskEntry* ptr = &start, * tem;
-	void (*fptr)(Core*);
 
 	for (; ptr->next != nullptr;)
 	{
@@ -91,9 +88,10 @@ void (*taskList::exec(_u32& tid))(Core*)
 			ptr->next = nullptr;
 			start.res = (resList*)((_u32)start.res - 1);
 			tid = tem->id;
-			fptr = tem->ptr;
-			delete tem;
-			return fptr;
+
+			//fptr = tem->ptr;
+
+			return *tem;
 		}
 		else
 		{
@@ -102,5 +100,5 @@ void (*taskList::exec(_u32& tid))(Core*)
 	}
 	tid = ptr->id;
 
-	return start.ptr;
+	return start;
 }

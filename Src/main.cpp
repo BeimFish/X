@@ -1,62 +1,38 @@
 #include "main.h"
 #include<stdio.h>
 
+#if defined(USE_WINDOWS) || defined(USE_LINUX)
+#include<stdlib.h>
+#else
 
+#endif
 
 int pc = 0;
 
 void fun(Core* core)
 {
-	for (int i = 0; i < 15; i++)
+	_u64* a = (_u64*)core->malloc(sizeof(_u64));
+
+	for (int i = 0; i < 20; i++)
 	{
-		pc++;
-		printf("ABCD\n");
+		*a = i;
+		printf("%d\n",*a);
 	}
-	//dispatcher.taskCreate(fun, 0);
-}
-
-
-void fu(Core* core)
-{
-
-	dispatcher.dispatchTask();
-	//printf("%d\n", core->TID());
-	
-	taskEntry* t = new taskEntry;
-	t->ptr = fu;
-	t->next = nullptr;
-	core->create(*t);
-
 
 }
+
 
 
 int main(void)
 {
-	int i = HEAPSIZE / (sizeof(_u64) + sizeof(memoryEntry));
-	memoryList a;
-	a.init(7);
-	int y = 0, n = 0;
+	manager.init();
+	Core c;
+	c.init(5, manager.creatMemory(16 * 1024, 5), 16 * 1024);
 
 
 
-
-	_u64* as = (_u64*)a.createEntry(sizeof(as), 0);
-
-	for (int k = 0; k < i - 1; k++)
-	{
-		if (a.createEntry(sizeof(as), 0) == nullptr)
-		{
-			n++;
-		}
-		else
-		{
-			y++;
-		}
-	}
-	a.deleteEntry(as);
-
-
+	c.create(fun,0);
+	
 
 	for (;;);
 }

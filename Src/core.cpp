@@ -2,6 +2,7 @@
 #include"datastruct/bitMap.h"
 #include"datastruct/resList.h"
 #include"datastruct/taskList.h"
+#include"datastruct/memoryList.h"
 
 #if defined(USE_CM4)||defined(USE_CM7)
 #include"res/static/arm/cm_id.h"
@@ -12,41 +13,65 @@
 #include<mutex>
 #endif
 
-void Core::init(_u8 id)
+void Core::init(_u8 id, void* ptr, _u32 size)
 {
 	this->id = id;
+	this->tid = id;
 	execTaskNum = 1;
 
-	resMessenger = new resList;
-	taskMessenger = new taskList;
+	((memoryList*)memoryManager)->init(ptr, size, id);
 
 
-	resMessenger->init(id);
-	taskMessenger->init(id);
+	resManager = (resList*)malloc(sizeof(resList));
+	taskManager = (taskList*)malloc(sizeof(taskList));
+
+
+	resManager->init(id);
+	taskManager->init(id);
 
 
 
 	auto start = [this]()
 		{
-
+			taskEntry* execptr;
 			for (;;)
 			{
-				taskMessenger->exec(tid)(this);
+				execptr = &taskManager->exec(tid);
+
+				execptr->ptr(this);                //执行任务
+				if (tid != (this->id << 24))
+				{
+					free(execptr);                 //释放任务块内存
+					free(tid);                     //释放任务内存
+				}
+				tid = this->id;                    //进入主任务
 			}
 		};
 
 #if defined(USE_WINDOWS) || defined(USE_LINUX)
-	thread = new std::thread(start);
+	//thread = new std::thread(start);
+
+	thread = new(((memoryList*)memoryManager)->createEntry(sizeof(std::thread), id))std::thread(start);
+	
+
+
+
+
 #else
 	for(;;) start();
 #endif
 
 
 }
-_u8 Core::create(taskEntry& task)
+_u8 Core::create(void(*ptr)(Core*), void* res)
 {
-	task.id = (this->id << 24) + execTaskNum++;
-	taskMessenger->createEntry(task);
+	taskEntry* task = (taskEntry*)this->malloc(sizeof(taskEntry));
+	task->next = nullptr;
+	task->ptr = ptr;
+	task->res = (resList*)res;
+
+	task->id = (this->id << 24) + execTaskNum++;
+	taskManager->createEntry(*task);
 	return 0;
 }
 _u32 Core::TID()
@@ -55,14 +80,14 @@ _u32 Core::TID()
 }
 _u32 Core::taskLength()
 {
-	return taskMessenger->listLength();
+	return taskManager->listLength();
 }
 
 
 #if defined(USE_WINDOWS) || defined(USE_LINUX)
 std::mutex* Core::mutex(_u8 taskId)
 {
-	return (std::mutex*)resMessenger->readEntry(taskId, resVector::mutex);
+	return (std::mutex*)resManager->readEntry(taskId, resVector::mutex);
 }
 #else
 MUTEX* Core::mutex(_u8 taskId)
@@ -70,3 +95,16 @@ MUTEX* Core::mutex(_u8 taskId)
 	return (MUTEX*)resMessenger->readEntry(taskId, resVector::mutex);
 }
 #endif
+void* Core::malloc(_u32 size)
+{
+	return ((memoryList*)memoryManager)->createEntry(size, tid);
+}
+void Core::free(void* ptr)
+{
+	((memoryList*)memoryManager)->deleteEntry(ptr);
+}
+void Core::free(_u32 id)
+{
+	((memoryList*)memoryManager)->deleteEntry(id);
+}
+

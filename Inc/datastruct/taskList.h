@@ -21,7 +21,8 @@ public:
 	void createEntry(taskEntry& newEntry);
 	void deleteEntry(_u32 id);
 	taskEntry& move();
-	void (*exec(_u32& tid))(Core*);
+	taskEntry& exec(_u32& tid);
+
 	_u32 listLength();
 
 };

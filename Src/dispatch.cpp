@@ -1,6 +1,7 @@
 #include "dispatch.h"
 #include"Core.h"
 #include"datastruct/taskList.h"
+
 void Dispatcher::init()
 {
     id = 0;
@@ -15,7 +16,7 @@ void Dispatcher::init()
 }
 void Dispatcher::coreCreate(Core& c)
 {
-    c.init(5 + (_u32)start->core);
+    //c.init(5 + (_u32)start->core);
     start->core = (Core*)((_u8)start->core + 1);
     coreEntry* tem = new coreEntry;
     tem->next = start->next;
@@ -57,7 +58,7 @@ void Dispatcher::dispatchTask()
         {
             if (ptr->core->taskLength() <= reg)
             {
-                ptr->core->create(task->move());
+               // ptr->core->create(task->move());
                 break;
             }
             else if (ptr->next != nullptr)

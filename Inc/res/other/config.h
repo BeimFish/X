@@ -15,12 +15,17 @@
  * USE_WINDOWS：使用Windows系统
  * USE_LINUX：使用Linux系统
  */
-#define HEAPSIZE 256*1024
-/*
-* 系统可用堆内存大小
-* 以B为单位
-*/
 
+#define HEAPSIZE 256*1024
+ /*
+ * 系统可用堆内存大小
+ * 以B为单位
+ */
+#define HEAPSTART malloc(HEAPSIZE)
+ /*
+ * 栈区的起始地址
+ * 该地址为void*类型
+ */
 
 
 
