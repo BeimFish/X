@@ -30,38 +30,6 @@ void Core::init(_u8 id, void* ptr, _u32 size)
 	taskManager->init(id);
 
 
-
-	auto start = [this]()
-		{
-			taskEntry* execptr;
-			for (;;)
-			{
-				execptr = &taskManager->exec(tid);
-
-				execptr->ptr(this);                //Ö´ĞĞÈÎÎñ
-				if (tid != (this->id << 24))
-				{
-					free(execptr);                 //ÊÍ·ÅÈÎÎñ¿éÄÚ´æ
-					free(tid);                     //ÊÍ·ÅÈÎÎñÄÚ´æ
-				}
-				tid = this->id;                    //½øÈëÖ÷ÈÎÎñ
-			}
-		};
-
-#if defined(USE_WINDOWS) || defined(USE_LINUX)
-	//thread = new std::thread(start);
-
-	thread = new(((memoryList*)memoryManager)->createEntry(sizeof(std::thread), id))std::thread(start);
-	
-
-
-
-
-#else
-	for(;;) start();
-#endif
-
-
 }
 _u8 Core::create(void(*ptr)(Core*), void* res)
 {
@@ -92,7 +60,8 @@ std::mutex* Core::mutex(_u8 taskId)
 #else
 MUTEX* Core::mutex(_u8 taskId)
 {
-	return (MUTEX*)resMessenger->readEntry(taskId, resVector::mutex);
+	//return (MUTEX*)resMessenger->readEntry(taskId, resVector::mutex);
+	return nullptr;
 }
 #endif
 void* Core::malloc(_u32 size)
@@ -108,3 +77,37 @@ void Core::free(_u32 id)
 	((memoryList*)memoryManager)->deleteEntry(id);
 }
 
+void Core::exec()
+{
+	auto start = [this]()
+		{
+			taskEntry* execptr;
+			for (;;)
+			{
+
+
+				execptr = &taskManager->exec(tid);
+
+				execptr->ptr(this);                //Ö´ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+				if (tid != (this->id << 24))
+				{
+					free(execptr);                 //ï¿½Í·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½
+					free(tid);                     //ï¿½Í·ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½Ú´ï¿½
+				}
+
+
+				tid = this->id;                    //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½
+
+			}
+		};
+
+#if defined(USE_WINDOWS) || defined(USE_LINUX)
+	//thread = new std::thread(start);
+
+	thread = new(((memoryList*)memoryManager)->createEntry(sizeof(std::thread), id))std::thread(start);
+
+#else
+	for (;;) start();
+#endif
+
+}

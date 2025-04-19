@@ -16,7 +16,7 @@ void fun(Core* core)
 	for (int i = 0; i < 20; i++)
 	{
 		*a = i;
-		printf("%d\n",*a);
+		//printf("%d\n",*a);
 	}
 
 }
@@ -25,14 +25,15 @@ void fun(Core* core)
 
 int main(void)
 {
+
 	manager.init();
 	Core c;
-	c.init(5, manager.creatMemory(16 * 1024, 5), 16 * 1024);
+	//c.init(5, manager.creatMemory(16 * 1024, 5), 16 * 1024);
+	c.init(5, manager.creatMemory(1024, 5), 1024);
+
+	c.create(fun, 0);
 
 
-
-	c.create(fun,0);
-	
-
+	c.exec();
 	for (;;);
 }

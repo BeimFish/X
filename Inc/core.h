@@ -37,6 +37,7 @@ public:
     _u32 taskLength();                                               //返回就绪任务的数量
     void* malloc(_u32 size);                                         //内存申请
     void free(void* ptr);                                            //内存释放
+    void exec();
 
     /////////////////////////////////资源API///////////////////////////////////////
 #if defined(USE_WINDOWS)

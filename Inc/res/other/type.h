@@ -10,4 +10,4 @@ typedef unsigned long long _u64;
 
 
 
-typedef _u64 _ptrSize;
+typedef _u32 _ptrSize;
