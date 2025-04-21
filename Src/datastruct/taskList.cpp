@@ -1,10 +1,10 @@
 #include <datastruct/taskList.h>
-void taskList::init(_u32 id)
+void taskList::init(_u32 acpt)
 {
 	start.next = nullptr;
-	start.res = (resList*)0;
+	start.res = nullptr;
 	start.ptr = [](Core*) {};
-	start.id = (id << 24);
+	start.acpt = acpt;
 
 }
 void taskList::createEntry(taskEntry& newEntry)
@@ -28,13 +28,13 @@ void taskList::createEntry(taskEntry& newEntry)
 		}
 	}
 }
-void taskList::deleteEntry(_u32 id)
+void taskList::deleteEntry(_u32 acpt)
 {
 	taskEntry* ptr = &start, * tem;
 
 	for (; ptr->next != nullptr;)
 	{
-		if (ptr->next->id == id)
+		if (ptr->next->acpt == acpt)
 		{
 			ptr->next = ptr->next->next;
 			start.res = (resList*)((_u32)start.res - 1);
@@ -76,7 +76,7 @@ taskEntry& taskList::move()
 	return start;
 }
 
-taskEntry& taskList::exec(_u32& tid)
+taskEntry& taskList::exec(_u32& acpt)
 {
 	taskEntry* ptr = &start, * tem;
 
@@ -87,7 +87,7 @@ taskEntry& taskList::exec(_u32& tid)
 			tem = ptr->next;
 			ptr->next = nullptr;
 			start.res = (resList*)((_u32)start.res - 1);
-			tid = tem->id;
+			acpt = tem->acpt;
 
 			//fptr = tem->ptr;
 
@@ -98,7 +98,7 @@ taskEntry& taskList::exec(_u32& tid)
 			ptr = ptr->next;
 		}
 	}
-	tid = ptr->id;
+	acpt = ptr->acpt;
 
 	return start;
 }

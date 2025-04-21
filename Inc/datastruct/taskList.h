@@ -9,7 +9,7 @@ struct taskEntry
 	taskEntry* next;
 	void(*ptr)(Core*);    //��¼��������ַ
 	resList* res;         //ӵ�е���Դ��
-	_u32 id;         //��ǰʹ�ø���Դ��task������Core��id
+	_acptSize acpt;         //��ǰʹ�ø���Դ��task������Core��id
 
 };
 
@@ -17,11 +17,11 @@ class taskList
 {
 	taskEntry start;
 public:
-	void init(_u32 id);
+	void init(_u32 acpt);
 	void createEntry(taskEntry& newEntry);
-	void deleteEntry(_u32 id);
+	void deleteEntry(_u32 acpt);
 	taskEntry& move();
-	taskEntry& exec(_u32& tid);
+	taskEntry& exec(_u32& acpt);
 
 	_u32 listLength();
 

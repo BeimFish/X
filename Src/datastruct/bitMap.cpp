@@ -1,6 +1,7 @@
 #include <datastruct/bitMap.h>
-void bitMap::init()
+void bitMap::init(_acptSize acpt)
 {
+	this->acpt = acpt;
 	map = 0;
 }
 void bitMap::upDate(_u8 date, _u8 bit)
