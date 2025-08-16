@@ -1,0 +1,7 @@
+enum address
+{
+	start = 0,
+	heap = 0x24000000,
+	share = 0x38000000,
+	end = 1 //end???????????
+};
